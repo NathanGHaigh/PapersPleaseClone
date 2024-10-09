@@ -37,6 +37,14 @@ int main()
     //'process inputs' element of the game loop
     while (window.pollEvent(event))
     {
+        if (event.type == sf::Event::MouseButtonPressed)
+        {
+            game.mouseButtonPressed(event);
+        }
+        if (event.type == sf::Event::MouseButtonReleased)
+        {
+            game.mouseButtonReleased(event);
+        }
       // "close requested" event: we close the window
       if (event.type == sf::Event::Closed)
         window.close();

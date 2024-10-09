@@ -14,6 +14,9 @@ class Game
   void render();
   void mouseClicked(sf::Event event);
   void keyPressed(sf::Event event);
+  void mouseButtonPressed(sf::Event event);
+  void mouseButtonReleased(sf::Event event);
+
 
   void newAnimal();
   void dragSprite(sf::Sprite* sprite);
@@ -25,6 +28,7 @@ class Game
   sf::Sprite* passport;
 
   sf::Sprite* dragged = nullptr;
+  sf::Vector2f drag_offset;
 
   sf::Texture* animals = new sf::Texture[3];
   sf::Texture* passports = new sf::Texture[3];

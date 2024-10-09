@@ -78,7 +78,7 @@ bool Game::init()
 
 void Game::update(float dt)
 {
-	dragSprite(passport);
+	dragSprite(dragged);
 }
 
 void Game::render()
@@ -98,7 +98,7 @@ void Game::mouseClicked(sf::Event event)
 
 void Game::keyPressed(sf::Event event)
 {
-
+	
 }
 
 void Game::newAnimal()
@@ -128,17 +128,37 @@ void Game::newAnimal()
 }
 
 void Game::dragSprite(sf::Sprite* sprite)
-{
-	sf::Vector2f(drag_offset);
-
+{	
 	if (sprite != nullptr)
 	{
 		sf::Vector2i mouse_position = sf::Mouse::getPosition(window);
 		sf::Vector2f mouse_positionf = static_cast<sf::Vector2f>(mouse_position);
-
 		sf::Vector2f drag_position = mouse_positionf - drag_offset;
 		sprite->setPosition(drag_position.x, drag_position.y);
 	}
+}
+
+void Game::mouseButtonPressed(sf::Event event)
+{
+	if (event.mouseButton.button == sf::Mouse::Left)
+	{
+		sf::Vector2i click = sf::Mouse::getPosition(window);
+		sf::Vector2f clickf = static_cast<sf::Vector2f>(click);
+
+		if (passport->getGlobalBounds().contains(clickf))
+		{		
+			
+			drag_offset.x = sf::Mouse::getPosition(window).x - passport->getPosition().x;
+			drag_offset.y = sf::Mouse::getPosition(window).y - passport->getPosition().y;
+
+			dragged = passport;
+		}
+	}
+}
+
+void Game::mouseButtonReleased(sf::Event event)
+{
+	dragged = nullptr;
 }
 
 
