@@ -14,13 +14,17 @@ class Game
   void render();
   void mouseClicked(sf::Event event);
   void keyPressed(sf::Event event);
+
   void newAnimal();
+  void dragSprite(sf::Sprite* sprite);
 
  private:
   sf::RenderWindow& window;
 
   sf::Sprite* character;
   sf::Sprite* passport;
+
+  sf::Sprite* dragged = nullptr;
 
   sf::Texture* animals = new sf::Texture[3];
   sf::Texture* passports = new sf::Texture[3];
