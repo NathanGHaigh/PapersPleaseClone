@@ -16,6 +16,7 @@ class Game
   void keyPressed(sf::Event event);
   void mouseButtonPressed(sf::Event event);
   void mouseButtonReleased(sf::Event event);
+  void scoreCounter(int quota_counter);
 
 
   void newAnimal();
@@ -46,6 +47,10 @@ class Game
   bool passport_accepted;
   bool passport_rejected;
   bool is_active = false;
+
+  int quota;
+  int quota_counter = 0;
+  int lives = 3;
 
 };
 

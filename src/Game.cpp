@@ -28,8 +28,10 @@ bool Game::init()
   stamped = false;
   passport_accepted = false;
   passport_rejected = false;
+  quota = 10;
 
   std::cout << "Starting" << std::endl;
+  //_____________________________________________________________________________________________
   //Loading Animal Textures
   if (!animals[0].loadFromFile("../Data/Images/kenney_animalpackredux/PNG/Round/elephant.png"))
   {
@@ -45,9 +47,7 @@ bool Game::init()
   {
 	  std::cout << " Texture animals[2] didn't load in \n";
   }
-
-  
-  //
+  //_______________________________________________________________________________________________
   //Loading Passport Textures
   if (!passports[0].loadFromFile("../Data/Images/Critter Crossing Customs/elephant passport.png"))
   {
@@ -63,7 +63,7 @@ bool Game::init()
   {
 	  std::cout << " Texture passport[2] didn't load in \n";
   }
-  //
+  //_______________________________________________________________________________________________
   //Loading Stamp Textures, Setting Stamps and Setting Button Positions
   if (!stamps[0].loadFromFile("../Data/Images/Critter Crossing Customs/accept button.png"))
   {
@@ -99,9 +99,7 @@ bool Game::init()
 
   reject_stamp_passport->setTexture(stamps[3]);
   reject_stamp_passport->setScale(0.8, 0.8);
- 
-	
-  // 
+  //________________________________________________________________________________________________________
   //Loading Backgorund Textures
   if (!background_texture.loadFromFile("../Data/Images/kenney_physicspack/PNG/Backgrounds/blue_desert.png"))
   {
@@ -119,6 +117,7 @@ bool Game::init()
 
   background.setTexture(background_texture);
   background.setScale(ScaleX, ScaleY);
+  //_______________________________________________________________________________________________________
 
   newAnimal();
   return true;
@@ -136,17 +135,25 @@ void Game::update(float dt)
 		if (should_accept == true && passport_accepted == true)
 		{
 			std::cout << "Correct\n";
+			quota_counter += 1;
+			std::cout << quota_counter << std::endl;
+			scoreCounter(quota_counter);
 			newAnimal();
 	
 		}
 		else if (should_accept == false && passport_rejected == true)
 		{
 			std::cout << "Correct\n";
+			quota_counter += 1;
+			std::cout << quota_counter << std::endl;
+			scoreCounter(quota_counter);
 			newAnimal();			
 		}
 		else
 		{
 			std::cout << "Wrong\n";
+			lives -= 1;
+			std::cout << lives << std::endl;
 			newAnimal();
 
 		}
@@ -287,4 +294,11 @@ void Game::mouseButtonReleased(sf::Event event)
 	dragged = nullptr;
 }
 
+void Game::scoreCounter(int quota_counter)
+{
+	if (quota_counter == quota)
+	{
+		std::cout << "You Win" << std::endl;
+	}
+}
 
