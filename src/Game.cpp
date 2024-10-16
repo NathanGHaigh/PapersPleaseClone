@@ -118,6 +118,22 @@ bool Game::init()
   background.setTexture(background_texture);
   background.setScale(ScaleX, ScaleY);
   //_______________________________________________________________________________________________________
+  //Text Set Up
+  if (!font.loadFromFile("../Data/Fonts/OpenSans-Bold.ttf"))
+  {
+	  std::cout << "Font didn't load in \n";
+  }
+  quota_text.setString("Quota:" + std::to_string(quota_counter) + "/" + std::to_string(quota));
+  quota_text.setFont(font);
+  quota_text.setCharacterSize(25);
+  quota_text.setFillColor(sf::Color(0, 0, 0, 255));
+  quota_text.setPosition(30, 15);
+
+  lives_text.setString("Lives:" + std::to_string(lives));
+  lives_text.setFont(font);
+  lives_text.setCharacterSize(25);
+  lives_text.setFillColor(sf::Color(0, 0, 0, 255));
+  lives_text.setPosition(1800, 15);
 
   newAnimal();
   return true;
@@ -153,6 +169,7 @@ void Game::update(float dt)
 		{
 			std::cout << "Wrong\n";
 			lives -= 1;
+			livesCounter(lives);
 			std::cout << lives << std::endl;
 			newAnimal();
 
@@ -166,6 +183,8 @@ void Game::render()
 	window.draw(background);
 	window.draw(*character);
 	window.draw(*passport);
+	window.draw(quota_text);
+	window.draw(lives_text);
 
 	if (passport_accepted)
 	{
@@ -296,9 +315,19 @@ void Game::mouseButtonReleased(sf::Event event)
 
 void Game::scoreCounter(int quota_counter)
 {
+	quota_text.setString("Quota:" + std::to_string(quota_counter) + "/" + std::to_string(quota));
 	if (quota_counter == quota)
 	{
 		std::cout << "You Win" << std::endl;
+	}
+}
+
+void Game::livesCounter(int lives)
+{
+	lives_text.setString("Lives:" + std::to_string(lives));
+	if (lives == 0)
+	{
+		std::cout << "You Lose" << std::endl;
 	}
 }
 

@@ -17,6 +17,7 @@ class Game
   void mouseButtonPressed(sf::Event event);
   void mouseButtonReleased(sf::Event event);
   void scoreCounter(int quota_counter);
+  void livesCounter(int lives);
 
 
   void newAnimal();
@@ -41,6 +42,10 @@ class Game
 
   sf::Sprite background;
   sf::Texture background_texture;
+
+  sf::Font font;
+  sf::Text quota_text;
+  sf::Text lives_text;
 
   bool stamped;
   bool should_accept;
