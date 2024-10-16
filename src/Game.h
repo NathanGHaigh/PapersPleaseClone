@@ -26,19 +26,26 @@ class Game
 
   sf::Sprite* character;
   sf::Sprite* passport;
+  sf::Sprite* accept_stamp;
+  sf::Sprite* reject_stamp;
+  sf::Sprite* accept_stamp_passport;
+  sf::Sprite* reject_stamp_passport;
 
   sf::Sprite* dragged = nullptr;
   sf::Vector2f drag_offset;
 
   sf::Texture* animals = new sf::Texture[3];
   sf::Texture* passports = new sf::Texture[3];
+  sf::Texture* stamps = new sf::Texture[4];
 
   sf::Sprite background;
   sf::Texture background_texture;
 
+  bool stamped;
   bool should_accept;
   bool passport_accepted;
   bool passport_rejected;
+  bool is_active = false;
 
 };
 

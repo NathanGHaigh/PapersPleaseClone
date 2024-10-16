@@ -20,7 +20,16 @@ bool Game::init()
 {
   character = new sf::Sprite;
   passport = new sf::Sprite;
+  accept_stamp = new sf::Sprite;
+  reject_stamp = new sf::Sprite;
+  accept_stamp_passport = new sf::Sprite;
+  reject_stamp_passport = new sf::Sprite;
 
+  stamped = false;
+  passport_accepted = false;
+  passport_rejected = false;
+
+  std::cout << "Starting" << std::endl;
   //Loading Animal Textures
   if (!animals[0].loadFromFile("../Data/Images/kenney_animalpackredux/PNG/Round/elephant.png"))
   {
@@ -36,6 +45,7 @@ bool Game::init()
   {
 	  std::cout << " Texture animals[2] didn't load in \n";
   }
+
   
   //
   //Loading Passport Textures
@@ -54,6 +64,44 @@ bool Game::init()
 	  std::cout << " Texture passport[2] didn't load in \n";
   }
   //
+  //Loading Stamp Textures, Setting Stamps and Setting Button Positions
+  if (!stamps[0].loadFromFile("../Data/Images/Critter Crossing Customs/accept button.png"))
+  {
+	  
+	  std::cout << "Texture stamp[0] didn't load in \n";
+  }
+
+  if (!stamps[1].loadFromFile("../Data/Images/Critter Crossing Customs/reject button.png"))
+  {
+	  
+	  std::cout << "Texture stamp[1] didn't load in \n";
+  }
+
+  if (!stamps[2].loadFromFile("../Data/Images/Critter Crossing Customs/accept.png"))
+  {
+
+	  std::cout << "Texture stamp[1] didn't load in \n";
+  }
+
+  if (!stamps[3].loadFromFile("../Data/Images/Critter Crossing Customs/reject.png"))
+  {
+
+	  std::cout << "Texture stamp[1] didn't load in \n";
+  }
+
+  accept_stamp->setTexture(stamps[0]);
+  accept_stamp->setPosition(1620, 820);
+
+  reject_stamp->setTexture(stamps[1]);
+  reject_stamp->setPosition(1620, 930);
+
+  accept_stamp_passport->setTexture(stamps[2]);
+
+  reject_stamp_passport->setTexture(stamps[3]);
+  reject_stamp_passport->setScale(0.8, 0.8);
+ 
+	
+  // 
   //Loading Backgorund Textures
   if (!background_texture.loadFromFile("../Data/Images/kenney_physicspack/PNG/Backgrounds/blue_desert.png"))
   {
@@ -79,6 +127,31 @@ bool Game::init()
 void Game::update(float dt)
 {
 	dragSprite(dragged);
+	accept_stamp_passport->setPosition(passport->getPosition().x + passport->getGlobalBounds().width / 7, passport->getPosition().y + passport->getGlobalBounds().height / 8);
+	reject_stamp_passport->setPosition(passport->getPosition().x + passport->getGlobalBounds().width / 7, passport->getPosition().y + passport->getGlobalBounds().height / 8);
+
+	if (passport->getPosition().x <= 100 && passport->getPosition().y <= 100 && stamped == true)
+	{
+		std::cout << "Passport Returned \n";
+		if (should_accept == true && passport_accepted == true)
+		{
+			std::cout << "Correct\n";
+			newAnimal();
+	
+		}
+		else if (should_accept == false && passport_rejected == true)
+		{
+			std::cout << "Correct\n";
+			newAnimal();			
+		}
+		else
+		{
+			std::cout << "Wrong\n";
+			newAnimal();
+
+		}
+	}
+
 }
 
 void Game::render()
@@ -86,6 +159,22 @@ void Game::render()
 	window.draw(background);
 	window.draw(*character);
 	window.draw(*passport);
+
+	if (passport_accepted)
+	{
+		window.draw(*accept_stamp_passport);
+	}
+
+	if (passport_rejected)
+	{
+		window.draw(*reject_stamp_passport);
+	}
+
+	if (is_active)
+	{
+		window.draw(*accept_stamp);
+		window.draw(*reject_stamp);
+	}
 }
 
 void Game::mouseClicked(sf::Event event)
@@ -103,6 +192,8 @@ void Game::keyPressed(sf::Event event)
 
 void Game::newAnimal()
 {
+	dragged = nullptr;
+	stamped = false;
 	passport_accepted = false;
 	passport_rejected = false;
 
@@ -112,15 +203,18 @@ void Game::newAnimal()
 	if (animal_index == passport_index)
 	{
 		should_accept = true;
+		std::cout << "Should Accept \n";
+
 	}
 	else
 	{
 		should_accept = false;
+		std::cout << "Should Reject \n";
 	}
 
 	character->setTexture(animals[animal_index], true);
 	character->setScale(1.8, 1.8);
-	character->setPosition(window.getSize().x / 2, window.getSize().y / 12);
+	character->setPosition(window.getSize().x / 10, window.getSize().y / 12);
 
 	passport->setTexture(passports[passport_index], true);
 	passport->setScale(0.6, 0.6);
@@ -152,6 +246,38 @@ void Game::mouseButtonPressed(sf::Event event)
 			drag_offset.y = sf::Mouse::getPosition(window).y - passport->getPosition().y;
 
 			dragged = passport;
+		}
+
+		if (accept_stamp->getGlobalBounds().contains(clickf) && is_active)
+		{
+			std::cout << "Accept Button Clicked" << std::endl;
+			stamped = true;
+			passport_accepted = true;
+			passport_rejected = false;
+		}
+
+		if (reject_stamp->getGlobalBounds().contains(clickf) && is_active)
+		{
+			std::cout << "Reject Button Clicked" << std::endl;
+			stamped = true;
+			passport_accepted = false;
+			passport_rejected = true;
+		}
+	}
+
+	if (event.mouseButton.button == sf::Mouse::Right)
+	{
+		sf::Vector2i click = sf::Mouse::getPosition(window);
+		sf::Vector2f clickf = static_cast<sf::Vector2f>(click);
+
+		if (passport->getGlobalBounds().contains(clickf))
+		{
+			std::cout << "Stamp Choice" << std::endl;
+			is_active = true;
+		}
+		else
+		{
+			is_active = false;
 		}
 	}
 }
