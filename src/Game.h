@@ -29,6 +29,7 @@ class Game
 
   bool in_menu;
   bool gameplay;
+  bool win_menu;
 
   sf::Sprite* character;
   sf::Sprite* passport;
@@ -50,6 +51,10 @@ class Game
   sf::Font font;
   sf::Text title_text;
   sf::Text play_text;
+
+  sf::Text win_text;
+  sf::Text quit_text;
+
   sf::Text quota_text;
   sf::Text lives_text;
 

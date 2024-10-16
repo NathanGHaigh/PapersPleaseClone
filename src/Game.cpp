@@ -20,6 +20,7 @@ bool Game::init()
 {
 	in_menu = true;
 	gameplay = false;
+	win_menu = false;
   character = new sf::Sprite;
   passport = new sf::Sprite;
   accept_stamp = new sf::Sprite;
@@ -141,6 +142,20 @@ bool Game::init()
   play_text.setPosition(window.getSize().x / 2 - play_text.getGlobalBounds().width / 2,
 	  window.getSize().y / 1.5 - play_text.getGlobalBounds().height / 3.5);
 
+  win_text.setString("Quota Met, You are a great great Asset to the Border Control");
+  win_text.setFont(font);
+  win_text.setCharacterSize(60);
+  win_text.setFillColor(sf::Color(255, 255, 255, 255));
+  win_text.setPosition(window.getSize().x / 2 - win_text.getGlobalBounds().width / 2,
+	  window.getSize().y / 3.5 - win_text.getGlobalBounds().height / 3.5);
+
+  quit_text.setString("Press Q to Quit");
+  quit_text.setFont(font);
+  quit_text.setCharacterSize(50);
+  quit_text.setFillColor(sf::Color(255, 255, 255, 255));
+  quit_text.setPosition(window.getSize().x / 2 - quit_text.getGlobalBounds().width / 2,
+	  window.getSize().y / 1.5 - quit_text.getGlobalBounds().height / 3.5);
+
   quota_text.setString("Quota:" + std::to_string(quota_counter) + "/" + std::to_string(quota));
   quota_text.setFont(font);
   quota_text.setCharacterSize(25);
@@ -159,10 +174,6 @@ bool Game::init()
 
 void Game::update(float dt)
 {
-	if (in_menu)
-	{
-
-	}
 	if (gameplay)
 	{
 		dragSprite(dragged);
@@ -232,6 +243,11 @@ void Game::render()
 			window.draw(*accept_stamp);
 			window.draw(*reject_stamp);
 		}
+	}
+	if (win_menu)
+	{
+		window.draw(win_text);
+		window.draw(quit_text);
 	}
 }
 
@@ -362,6 +378,8 @@ void Game::scoreCounter(int quota_counter)
 	if (quota_counter == quota)
 	{
 		std::cout << "You Win" << std::endl;
+		win_menu = true;
+		gameplay = false;
 	}
 }
 
