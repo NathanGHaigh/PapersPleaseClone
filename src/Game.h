@@ -24,7 +24,11 @@ class Game
   void dragSprite(sf::Sprite* sprite);
 
  private:
+
   sf::RenderWindow& window;
+
+  bool in_menu;
+  bool gameplay;
 
   sf::Sprite* character;
   sf::Sprite* passport;
@@ -44,6 +48,8 @@ class Game
   sf::Texture background_texture;
 
   sf::Font font;
+  sf::Text title_text;
+  sf::Text play_text;
   sf::Text quota_text;
   sf::Text lives_text;
 

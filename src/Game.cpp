@@ -18,6 +18,8 @@ Game::~Game()
 
 bool Game::init()
 {
+	in_menu = true;
+	gameplay = false;
   character = new sf::Sprite;
   passport = new sf::Sprite;
   accept_stamp = new sf::Sprite;
@@ -123,6 +125,22 @@ bool Game::init()
   {
 	  std::cout << "Font didn't load in \n";
   }
+
+  
+  title_text.setString("Animal Crossing: Legal Edition");
+  title_text.setFont(font);
+  title_text.setCharacterSize(100);
+  title_text.setFillColor(sf::Color(255, 255, 255, 255));
+  title_text.setPosition(window.getSize().x / 2 - title_text.getGlobalBounds().width / 2,
+	  window.getSize().y / 3.5 - title_text.getGlobalBounds().height / 3.5);
+
+  play_text.setString("Press Enter to Play");
+  play_text.setFont(font);
+  play_text.setCharacterSize(50);
+  play_text.setFillColor(sf::Color(255, 255, 255, 255));
+  play_text.setPosition(window.getSize().x / 2 - play_text.getGlobalBounds().width / 2,
+	  window.getSize().y / 1.5 - play_text.getGlobalBounds().height / 3.5);
+
   quota_text.setString("Quota:" + std::to_string(quota_counter) + "/" + std::to_string(quota));
   quota_text.setFont(font);
   quota_text.setCharacterSize(25);
@@ -141,65 +159,79 @@ bool Game::init()
 
 void Game::update(float dt)
 {
-	dragSprite(dragged);
-	accept_stamp_passport->setPosition(passport->getPosition().x + passport->getGlobalBounds().width / 7, passport->getPosition().y + passport->getGlobalBounds().height / 8);
-	reject_stamp_passport->setPosition(passport->getPosition().x + passport->getGlobalBounds().width / 7, passport->getPosition().y + passport->getGlobalBounds().height / 8);
-
-	if (passport->getPosition().x <= 100 && passport->getPosition().y <= 100 && stamped == true)
+	if (in_menu)
 	{
-		std::cout << "Passport Returned \n";
-		if (should_accept == true && passport_accepted == true)
-		{
-			std::cout << "Correct\n";
-			quota_counter += 1;
-			std::cout << quota_counter << std::endl;
-			scoreCounter(quota_counter);
-			newAnimal();
-	
-		}
-		else if (should_accept == false && passport_rejected == true)
-		{
-			std::cout << "Correct\n";
-			quota_counter += 1;
-			std::cout << quota_counter << std::endl;
-			scoreCounter(quota_counter);
-			newAnimal();			
-		}
-		else
-		{
-			std::cout << "Wrong\n";
-			lives -= 1;
-			livesCounter(lives);
-			std::cout << lives << std::endl;
-			newAnimal();
 
+	}
+	if (gameplay)
+	{
+		dragSprite(dragged);
+		accept_stamp_passport->setPosition(passport->getPosition().x + passport->getGlobalBounds().width / 7, passport->getPosition().y + passport->getGlobalBounds().height / 8);
+		reject_stamp_passport->setPosition(passport->getPosition().x + passport->getGlobalBounds().width / 7, passport->getPosition().y + passport->getGlobalBounds().height / 8);
+
+		if (passport->getPosition().x <= 100 && passport->getPosition().y <= 100 && stamped == true)
+		{
+			std::cout << "Passport Returned \n";
+			if (should_accept == true && passport_accepted == true)
+			{
+				std::cout << "Correct\n";
+				quota_counter += 1;
+				std::cout << quota_counter << std::endl;
+				scoreCounter(quota_counter);
+				newAnimal();
+
+			}
+			else if (should_accept == false && passport_rejected == true)
+			{
+				std::cout << "Correct\n";
+				quota_counter += 1;
+				std::cout << quota_counter << std::endl;
+				scoreCounter(quota_counter);
+				newAnimal();
+			}
+			else
+			{
+				std::cout << "Wrong\n";
+				lives -= 1;
+				livesCounter(lives);
+				std::cout << lives << std::endl;
+				newAnimal();
+
+			}
 		}
 	}
-
 }
 
 void Game::render()
 {
-	window.draw(background);
-	window.draw(*character);
-	window.draw(*passport);
-	window.draw(quota_text);
-	window.draw(lives_text);
-
-	if (passport_accepted)
+	if (in_menu)
 	{
-		window.draw(*accept_stamp_passport);
+		window.draw(title_text);
+		window.draw(play_text);
 	}
-
-	if (passport_rejected)
+	if (gameplay)
 	{
-		window.draw(*reject_stamp_passport);
-	}
+		window.draw(background);
+		window.draw(*character);
+		window.draw(*passport);
+		window.draw(quota_text);
+		window.draw(lives_text);
 
-	if (is_active)
-	{
-		window.draw(*accept_stamp);
-		window.draw(*reject_stamp);
+		if (passport_accepted)
+		{
+			window.draw(*accept_stamp_passport);
+		}
+
+		if (passport_rejected)
+		{
+			window.draw(*reject_stamp_passport);
+		}
+
+		if (is_active)
+		{
+			window.draw(*accept_stamp);
+			window.draw(*reject_stamp);
+		}
 	}
 }
 
@@ -213,7 +245,18 @@ void Game::mouseClicked(sf::Event event)
 
 void Game::keyPressed(sf::Event event)
 {
-	
+	if (event.key.code == sf::Keyboard::Q)
+	{
+		window.close();
+	}
+	if (in_menu)
+	{
+		if (event.key.code == sf::Keyboard::Enter)
+		{
+			in_menu = false;
+			gameplay = true;
+		}
+	}
 }
 
 void Game::newAnimal()
@@ -328,6 +371,11 @@ void Game::livesCounter(int lives)
 	if (lives == 0)
 	{
 		std::cout << "You Lose" << std::endl;
+		quota_counter = 0;
+		lives = 3;
+		lives_text.setString("Lives:" + std::to_string(lives));
+		gameplay = false;
+		in_menu = true;
 	}
 }
 

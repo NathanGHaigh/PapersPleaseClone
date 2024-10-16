@@ -37,6 +37,11 @@ int main()
     //'process inputs' element of the game loop
     while (window.pollEvent(event))
     {
+        if (event.type == sf::Event::KeyPressed)
+        {
+            game.keyPressed(event);
+        }
+
         if (event.type == sf::Event::MouseButtonPressed)
         {
             game.mouseButtonPressed(event);
